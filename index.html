@@ -16,239 +16,71 @@
     --text2: #706e69;
     --text3: #b0aea8;
     --accent: #2d6a4f;
-
-    --c-yes-bg: #d1fae5;
-    --c-yes-text: #065f46;
-    --c-yes-dot: #10b981;
-
-    --c-req-bg: #fef3c7;
-    --c-req-text: #92400e;
-    --c-req-dot: #f59e0b;
-
-    --c-todo-bg: #dbeafe;
-    --c-todo-text: #1e40af;
-    --c-todo-dot: #3b82f6;
-
-    --c-no-bg: #fee2e2;
-    --c-no-text: #991b1b;
-    --c-no-dot: #ef4444;
-
-    --c-na-bg: #f3f4f6;
-    --c-na-text: #9ca3af;
-
-    --c-wait-bg: #ede9fe;
-    --c-wait-text: #5b21b6;
-
-    --row-complete: #ecfdf5;
-    --row-complete-hover: #d1fae5;
+    --c-yes-bg: #d1fae5; --c-yes-text: #065f46; --c-yes-dot: #10b981;
+    --c-req-bg: #fef3c7; --c-req-text: #92400e; --c-req-dot: #f59e0b;
+    --c-todo-bg: #dbeafe; --c-todo-text: #1e40af; --c-todo-dot: #3b82f6;
+    --c-no-bg: #fee2e2; --c-no-text: #991b1b; --c-no-dot: #ef4444;
+    --c-na-bg: #f3f4f6; --c-na-text: #9ca3af;
+    --c-wait-bg: #ede9fe; --c-wait-text: #5b21b6;
+    --row-done: #ecfdf5; --row-done-hover: #d1fae5;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    line-height: 1.5;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.5; }
 
-  /* ── Header ── */
-  .header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 1.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-  }
-
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 1.75rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
   .brand { display: flex; align-items: center; gap: 10px; }
-
-  .brand-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--accent);
-  }
-
-  .brand-name {
-    font-size: 13px; font-weight: 600;
-    letter-spacing: 0.03em; color: var(--text);
-  }
-
+  .brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .brand-name { font-size: 13px; font-weight: 600; color: var(--text); }
   .brand-sep { color: var(--text3); }
-
   .brand-sub { font-size: 12px; color: var(--text2); }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .sync-pill { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text3); background: var(--bg); border: 1px solid var(--border2); padding: 3px 10px; border-radius: 20px; }
+  .export-btn { background: var(--accent); color: #fff; border: none; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; padding: 6px 14px; border-radius: 6px; cursor: pointer; }
+  .export-btn:hover { opacity: 0.9; }
 
-  .sync-pill {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; color: var(--text3);
-    background: var(--bg);
-    border: 1px solid var(--border2);
-    padding: 3px 10px; border-radius: 20px;
-  }
-
-  /* ── Stats ── */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .stat {
-    padding: 1rem 1.75rem;
-    border-right: 1px solid var(--border);
-  }
-
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface); border-bottom: 1px solid var(--border); }
+  .stat { padding: 1rem 1.75rem; border-right: 1px solid var(--border); }
   .stat:last-child { border-right: none; }
+  .stat-num { font-size: 26px; font-weight: 600; font-family: 'JetBrains Mono', monospace; color: var(--accent); line-height: 1; margin-bottom: 3px; }
+  .stat-lbl { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); }
 
-  .stat-num {
-    font-size: 26px; font-weight: 600;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--accent); line-height: 1;
-    margin-bottom: 3px;
-  }
-
-  .stat-lbl {
-    font-size: 10px; font-weight: 500;
-    text-transform: uppercase; letter-spacing: 0.08em;
-    color: var(--text3);
-  }
-
-  /* ── Legend ── */
-  .legend-bar {
-    background: var(--row-complete);
-    border-bottom: 1px solid #a7f3d0;
-    padding: 0.5rem 1.75rem;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
-
-  .legend-title {
-    font-size: 10px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.08em;
-    color: var(--accent);
-  }
-
+  .legend-bar { background: var(--row-done); border-bottom: 1px solid #a7f3d0; padding: 0.5rem 1.75rem; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+  .legend-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
   .legend-items { display: flex; gap: 16px; flex-wrap: wrap; }
-
-  .li {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 11px; color: var(--text2);
-  }
-
+  .li { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text2); }
   .li-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-  /* ── Controls ── */
-  .controls {
-    background: var(--surface);
-    border-bottom: 2px solid var(--border2);
-    padding: 0.75rem 1.75rem;
-    display: flex; gap: 8px;
-    align-items: center; flex-wrap: wrap;
-  }
+  .edit-hint { margin-left: auto; font-size: 11px; color: var(--accent); font-style: italic; }
 
-  .search {
-    background: var(--bg);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    padding: 6px 12px;
-    border-radius: 6px;
-    width: 220px; outline: none;
-    transition: border-color 0.15s;
-  }
-
+  .controls { background: var(--surface); border-bottom: 2px solid var(--border2); padding: 0.75rem 1.75rem; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .search { background: var(--bg); border: 1px solid var(--border2); color: var(--text); font-family: 'Inter', sans-serif; font-size: 12px; padding: 6px 12px; border-radius: 6px; width: 220px; outline: none; transition: border-color 0.15s; }
   .search:focus { border-color: var(--accent); }
   .search::placeholder { color: var(--text3); }
-
-  .fbtn {
-    background: var(--bg);
-    border: 1px solid var(--border2);
-    color: var(--text2);
-    font-family: 'Inter', sans-serif;
-    font-size: 11px; font-weight: 500;
-    padding: 5px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.12s;
-  }
-
+  .fbtn { background: var(--bg); border: 1px solid var(--border2); color: var(--text2); font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 6px; cursor: pointer; transition: all 0.12s; }
   .fbtn:hover { border-color: var(--accent); color: var(--accent); }
   .fbtn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .cat-select { margin-left: auto; background: var(--bg); border: 1px solid var(--border2); color: var(--text2); font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 6px; cursor: pointer; outline: none; }
 
-  .cat-select {
-    margin-left: auto;
-    background: var(--bg);
-    border: 1px solid var(--border2);
-    color: var(--text2);
-    font-family: 'Inter', sans-serif;
-    font-size: 11px; font-weight: 500;
-    padding: 5px 12px;
-    border-radius: 6px; cursor: pointer; outline: none;
-  }
-
-  /* ── Table ── */
   .table-wrap { overflow-x: auto; }
-
   table { width: 100%; border-collapse: collapse; }
+  thead { background: #f9f8f6; border-bottom: 2px solid var(--border2); }
+  th { padding: 9px 14px; text-align: left; font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+  th.tc { text-align: center; }
 
-  thead {
-    position: sticky; top: 57px; z-index: 10;
-    background: #f9f8f6;
-    border-bottom: 2px solid var(--border2);
-  }
-
-  th {
-    padding: 9px 14px;
-    text-align: left;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px; font-weight: 500;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    white-space: nowrap;
-  }
-
-  th.th-center { text-align: center; }
-
-  td {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-    background: var(--surface);
-  }
-
-  td.td-center { text-align: center; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; background: var(--surface); }
+  td.tc { text-align: center; }
 
   tbody tr { cursor: pointer; transition: background 0.1s; }
   tbody tr:hover td { background: #f9f8f6; }
-  tbody tr.row-done td { background: var(--row-complete); }
-  tbody tr.row-done:hover td { background: var(--row-complete-hover); }
+  tbody tr.row-done td { background: var(--row-done); }
+  tbody tr.row-done:hover td { background: var(--row-done-hover); }
 
-  /* ── Judge name cell ── */
-  .j-name { font-weight: 600; font-size: 13px; color: var(--text); }
-  .j-sub {
-    font-size: 10px; color: var(--text3);
-    font-family: 'JetBrains Mono', monospace;
-    margin-top: 2px;
-  }
+  .j-name { font-weight: 600; font-size: 13px; color: var(--text); white-space: nowrap; }
+  .j-sub { font-size: 10px; color: var(--text3); font-family: 'JetBrains Mono', monospace; margin-top: 2px; white-space: nowrap; }
 
-  /* ── Category tag ── */
-  .cat {
-    display: inline-block;
-    padding: 2px 8px; border-radius: 4px;
-    font-size: 10px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.05em;
-    white-space: nowrap;
-  }
-
+  .cat { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
   .cat-Adventure { background: #fef9c3; color: #854d0e; }
   .cat-Aerial    { background: #e0f2fe; color: #075985; }
   .cat-Bike      { background: #fce7f3; color: #9d174d; }
@@ -259,85 +91,29 @@
   .cat-Trail     { background: #dcfce7; color: #166534; }
   .cat-Theme     { background: #f1f5f9; color: #334155; }
 
-  /* ── Status indicator (icon + label) ── */
-  .pill {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 3px 9px; border-radius: 20px;
-    font-size: 10px; font-weight: 600;
-    white-space: nowrap;
-  }
-
+  .pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 20px; font-size: 10px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: opacity 0.15s; user-select: none; }
+  .pill:hover { opacity: 0.75; }
   .pill-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .p-yes  { background: var(--c-yes-bg);  color: var(--c-yes-text);  } .p-yes  .pill-dot { background: var(--c-yes-dot);  }
+  .p-req  { background: var(--c-req-bg);  color: var(--c-req-text);  } .p-req  .pill-dot { background: var(--c-req-dot);  }
+  .p-todo { background: var(--c-todo-bg); color: var(--c-todo-text); } .p-todo .pill-dot { background: var(--c-todo-dot); }
+  .p-no   { background: var(--c-no-bg);   color: var(--c-no-text);   } .p-no   .pill-dot { background: var(--c-no-dot);   }
+  .p-na   { background: var(--c-na-bg);   color: var(--c-na-text);   } .p-na   .pill-dot { background: #d1d5db;           }
+  .p-wait { background: var(--c-wait-bg); color: var(--c-wait-text); } .p-wait .pill-dot { background: #8b5cf6;           }
 
-  .p-yes  { background: var(--c-yes-bg); color: var(--c-yes-text); }
-  .p-yes .pill-dot  { background: var(--c-yes-dot); }
-
-  .p-req  { background: var(--c-req-bg); color: var(--c-req-text); }
-  .p-req .pill-dot  { background: var(--c-req-dot); }
-
-  .p-todo { background: var(--c-todo-bg); color: var(--c-todo-text); }
-  .p-todo .pill-dot { background: var(--c-todo-dot); }
-
-  .p-no   { background: var(--c-no-bg); color: var(--c-no-text); }
-  .p-no .pill-dot   { background: var(--c-no-dot); }
-
-  .p-na   { background: var(--c-na-bg); color: var(--c-na-text); }
-  .p-na .pill-dot   { background: #d1d5db; }
-
-  .p-wait { background: var(--c-wait-bg); color: var(--c-wait-text); }
-  .p-wait .pill-dot { background: #8b5cf6; }
-
-  .p-declined { background: var(--c-no-bg); color: var(--c-no-text); }
-  .p-declined .pill-dot { background: var(--c-no-dot); }
-
-  /* ── Check icon cells ── */
-  .check { font-size: 15px; }
-
-  /* ── Expanded detail ── */
-  .detail-row td {
-    background: #f0fdf4 !important;
-    padding: 14px 20px 18px 56px;
-    border-bottom: 1px solid #a7f3d0;
-  }
-
-  .detail-inner {
-    display: grid;
-    grid-template-columns: 200px 1fr 1fr;
-    gap: 20px;
-  }
-
-  .di-section h5 {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px; font-weight: 500;
-    text-transform: uppercase; letter-spacing: 0.1em;
-    color: var(--text3); margin-bottom: 6px;
-  }
-
+  .detail-row td { background: #f0fdf4 !important; padding: 14px 20px 18px 56px; border-bottom: 1px solid #a7f3d0; }
+  .detail-inner { display: grid; grid-template-columns: 200px 1fr 1fr; gap: 20px; }
+  .di-section h5 { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); margin-bottom: 6px; }
   .di-section p { font-size: 12px; color: var(--text2); line-height: 1.6; }
-
   .di-pills { display: flex; flex-wrap: wrap; gap: 4px; }
 
-  /* ── Empty ── */
-  .empty-row td {
-    text-align: center; padding: 3rem;
-    color: var(--text3);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    background: var(--surface) !important;
-  }
+  .empty-row td { text-align: center; padding: 3rem; color: var(--text3); font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--surface) !important; }
 
-  /* ── Footer ── */
-  .footer {
-    padding: 1rem 1.75rem;
-    border-top: 1px solid var(--border);
-    display: flex; justify-content: space-between;
-    background: var(--surface);
-  }
+  .footer { padding: 1rem 1.75rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; background: var(--surface); }
+  .footer span { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text3); }
 
-  .footer span {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; color: var(--text3);
-  }
+  .toast { position: fixed; bottom: 24px; right: 24px; background: #1c1b19; color: #fff; font-size: 12px; font-family: 'Inter', sans-serif; padding: 10px 16px; border-radius: 8px; opacity: 0; transition: opacity 0.3s; z-index: 999; pointer-events: none; }
+  .toast.show { opacity: 1; }
 
   @media (max-width: 768px) {
     .stats { grid-template-columns: repeat(2,1fr); }
@@ -354,7 +130,10 @@
     <span class="brand-sep">/</span>
     <span class="brand-sub">Judge Relations Tracker</span>
   </div>
-  <span class="sync-pill">Synced — June 2026</span>
+  <div class="header-right">
+    <span class="sync-pill">Synced — June 2026</span>
+    <button class="export-btn" onclick="exportData()">⬇ Export updated file</button>
+  </div>
 </div>
 
 <div class="stats" id="stats"></div>
@@ -362,13 +141,14 @@
 <div class="legend-bar">
   <span class="legend-title">Legend</span>
   <div class="legend-items">
-    <div class="li"><div class="li-dot" style="background:var(--c-yes-dot)"></div> Yes / Done</div>
-    <div class="li"><div class="li-dot" style="background:var(--c-req-dot)"></div> Requested / Pending</div>
-    <div class="li"><div class="li-dot" style="background:var(--c-todo-dot)"></div> To Do</div>
-    <div class="li"><div class="li-dot" style="background:var(--c-no-dot)"></div> No / Declined</div>
-    <div class="li"><div class="li-dot" style="background:#d1d5db"></div> N/A</div>
-    <div class="li"><div class="li-dot" style="background:var(--accent);"></div> Row = Profile live + social story done</div>
+    <div class="li"><div class="li-dot" style="background:var(--c-yes-dot)"></div>Yes / Done</div>
+    <div class="li"><div class="li-dot" style="background:var(--c-req-dot)"></div>Requested</div>
+    <div class="li"><div class="li-dot" style="background:var(--c-todo-dot)"></div>To Do</div>
+    <div class="li"><div class="li-dot" style="background:var(--c-no-dot)"></div>No / Declined</div>
+    <div class="li"><div class="li-dot" style="background:#d1d5db"></div>N/A</div>
+    <div class="li"><div class="li-dot" style="background:var(--accent)"></div>Profile live + social story done</div>
   </div>
+  <span class="edit-hint">💡 Click any status pill to change it</span>
 </div>
 
 <div class="controls">
@@ -394,13 +174,13 @@
         <th>Category</th>
         <th>Type</th>
         <th>Accepted</th>
-        <th class="th-center">Portrait</th>
-        <th class="th-center">Bio</th>
-        <th class="th-center">Quotes</th>
-        <th class="th-center">Video</th>
-        <th class="th-center">Profile</th>
-        <th class="th-center">Live</th>
-        <th class="th-center">Social Story</th>
+        <th class="tc">Portrait</th>
+        <th class="tc">Bio</th>
+        <th class="tc">Quotes</th>
+        <th class="tc">Video</th>
+        <th class="tc">Profile</th>
+        <th class="tc">Live</th>
+        <th class="tc">Social Story</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -412,9 +192,11 @@
   <span id="count"></span>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-const judges = [
-  { name:'Chris Burkard', cat:'Adventure', type:'Photographer', country:'USA', org:'Former Winner', contact:'chris@chrisburkard.com', accepted:'YES', portrait:'YES', bio:'YES', video:'N/A', quotes:'YES', profile:'YES', live:'YES', social:'YES', notes:'Happy to support, sends assets fast. Quite the businessman — test how much support we can request for free.' },
+const DEFAULT_JUDGES = [
+  { name:'Chris Burkard', cat:'Adventure', type:'Photographer', country:'USA', org:'Former Winner', contact:'chris@chrisburkard.com', accepted:'YES', portrait:'YES', bio:'YES', video:'N/A', quotes:'YES', profile:'YES', live:'YES', social:'YES', notes:'Happy to support, sends assets fast. Has quite the businessman thinking.' },
   { name:'Tim Kemple', cat:'Adventure', type:'NGO Photographer', country:'USA', org:'Leave No Trace', contact:'tim@kemplemedia.com', accepted:'YES', portrait:'REQUESTED', bio:'YES', video:'N/A', quotes:'REQUESTED', profile:'INCOMPLETE', live:'', social:'', notes:'Just need portrait. Followed up 19 May.' },
   { name:'Savanna Cummins', cat:'Adventure', type:'Athlete', country:'USA', org:'Athlete', contact:'info@savcummins.com', accepted:'YES', portrait:'YES', bio:'YES', video:'REQUESTED', quotes:'REQUESTED', profile:'YES', live:'YES', social:'YES', notes:'Profile live. Quote answers and video still pending.' },
   { name:'John Summerton', cat:'Adventure', type:'Media', country:'UK', org:'Sidetracked', contact:'john@sidetracked.co.uk', accepted:'YES', portrait:'YES', bio:'YES', video:'REQUESTED', quotes:'REQUESTED', profile:'YES', live:'YES', social:'YES', notes:'Deliverables received. Profile live.' },
@@ -422,7 +204,7 @@ const judges = [
   { name:'Adi Geisegger', cat:'Aerial', type:'Photographer', country:'AUT', org:'Photographer / Angelbird', contact:'office@adigeisegger.com', accepted:'YES', portrait:'YES', bio:'YES', video:'YES', quotes:'YES', profile:'YES', live:'YES', social:'YES', notes:'Super fast responses. English not great. Connected to X-Alps team.' },
   { name:'Marcus King', cat:'Aerial', type:'Media', country:'GBR', org:'Cross Country Magazine', contact:'marcus@xcmag.com', accepted:'YES', portrait:'YES', bio:'YES', video:'N/A', quotes:'YES', profile:'YES', live:'YES', social:'REQUESTED', notes:'Responses a bit slow. Contact from Tarquin.' },
   { name:'Amber Forte', cat:'Aerial', type:'Athlete', country:'GBR', org:'Red Bull Athlete', contact:'amberfortecoach@gmail.com', accepted:'YES', portrait:'REQUESTED', bio:'REQUESTED', video:'N/A', quotes:'', profile:'TO DO', live:'', social:'', notes:'Said yes. Deliverables pending.' },
-  { name:'Brian Park', cat:'Bike', type:'Media', country:'USA', org:'Outside / Pinkbike', contact:'bpark@outsideinc.com', accepted:'YES', portrait:'YES', bio:'YES', video:'NO', quotes:'YES', profile:'YES', live:'YES', social:'YES', notes:'Responses a bit slow. Follow-up sent 10.3.' },
+  { name:'Brian Park', cat:'Bike', type:'Media', country:'USA', org:'Outside / Pinkbike', contact:'bpark@outsideinc.com', accepted:'YES', portrait:'YES', bio:'YES', video:'NO', quotes:'YES', profile:'YES', live:'YES', social:'YES', notes:'Responses a bit slow.' },
   { name:'Senad Grosic', cat:'Bike', type:'Athlete', country:'GER', org:'Red Bull Athlete', contact:'info@senad-grosic.com', accepted:'YES', portrait:'REQUESTED', bio:'REQUESTED', video:'TO DO', quotes:'REQUESTED', profile:'INCOMPLETE', live:'', social:'', notes:'No response to follow-ups. Confirmed via Ulrich.' },
   { name:'Katie Lozancich', cat:'Bike', type:'Photographer', country:'USA', org:'Ski Journal', contact:'katie.lozancich@gmail.com', accepted:'YES', portrait:'YES', bio:'YES', video:'REQUESTED', quotes:'REQUESTED', profile:'YES', live:'YES', social:'YES', notes:'Profile live. Quote answers pending.' },
   { name:'Micayla Gatto', cat:'Bike', type:'NGO Photographer', country:'USA', org:'World Bicycle Relief', contact:'via Ryan Snyder', accepted:'WFF', portrait:'REQUESTED', bio:'REQUESTED', video:'REQUESTED', quotes:'', profile:'REQUESTED', live:'', social:'', notes:'Interested but no confirmation. Asked about payment.' },
@@ -463,30 +245,67 @@ const judges = [
   { name:'Peter Salzmann', cat:'Aerial', type:'Athlete', country:'AUT', org:'Red Bull Athlete', contact:'mail@petersalzmann.at', accepted:'NO', portrait:'', bio:'', video:'', quotes:'', profile:'', live:'', social:'', notes:'Big projects next 2-3 years. Interested in future editions.' },
 ];
 
+const EDITABLE_FIELDS = ['accepted','portrait','bio','quotes','video','profile','live','social'];
+const CYCLE = { accepted: ['YES','WFF','NO'], portrait: ['YES','REQUESTED','TO DO','NO','N/A',''], bio: ['YES','REQUESTED','INCOMPLETE','TO DO','NO',''], quotes: ['YES','REQUESTED','TO DO','NO',''], video: ['YES','REQUESTED','TO DO','NO','N/A',''], profile: ['YES','REQUESTED','INCOMPLETE','TO DO','NO',''], live: ['YES',''], social: ['YES','REQUESTED','TO DO','NO',''] };
+
+// Load from localStorage or use defaults
+let judges = JSON.parse(localStorage.getItem('illume_judges') || 'null') || DEFAULT_JUDGES;
+
+function save() { localStorage.setItem('illume_judges', JSON.stringify(judges)); }
+
+function cyclePill(e, judgeIdx, field) {
+  e.stopPropagation();
+  const vals = CYCLE[field];
+  const cur = judges[judgeIdx][field];
+  const curIdx = vals.indexOf(cur);
+  judges[judgeIdx][field] = vals[(curIdx + 1) % vals.length];
+  save();
+  showToast(`Updated ${judges[judgeIdx].name} · ${field}`);
+  render();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
 function pillClass(v) {
   if (v === 'YES') return 'p-yes';
   if (v === 'REQUESTED' || v === 'INCOMPLETE') return 'p-req';
   if (v === 'TO DO') return 'p-todo';
   if (v === 'NO') return 'p-no';
-  if (v === 'N/A' || v === 'NOT REQ') return 'p-na';
+  if (v === 'N/A') return 'p-na';
+  if (v === 'WFF') return 'p-wait';
   return 'p-na';
 }
 
 function pillLabel(v) {
-  const m = { 'YES':'Yes', 'REQUESTED':'Requested', 'TO DO':'To Do', 'NO':'No', 'N/A':'N/A', 'NOT REQ':'N/A', 'INCOMPLETE':'Incomplete', 'WFF':'Waiting' };
-  return m[v] || (v || '—');
+  const m = { 'YES':'Yes','REQUESTED':'Requested','TO DO':'To Do','NO':'No','N/A':'N/A','INCOMPLETE':'Incomplete','WFF':'Waiting','':`—` };
+  return m[v] !== undefined ? m[v] : (v || '—');
 }
 
-function pill(v) {
-  if (!v) return '<span style="color:#d1d5db;font-size:11px">—</span>';
-  return `<span class="pill ${pillClass(v)}"><span class="pill-dot"></span>${pillLabel(v)}</span>`;
+function pill(v, judgeIdx, field) {
+  if (!v && field !== 'accepted') return `<span class="pill p-na" onclick="cyclePill(event,${judgeIdx},'${field}')"><span class="pill-dot"></span>—</span>`;
+  const cls = pillClass(v);
+  const lbl = pillLabel(v);
+  if (field === 'accepted') {
+    return `<span class="pill ${cls}" onclick="cyclePill(event,${judgeIdx},'${field}')"><span class="pill-dot"></span>${lbl === 'YES' ? 'Confirmed' : lbl === 'WFF' ? 'Waiting' : lbl === 'NO' ? 'Declined' : lbl}</span>`;
+  }
+  return `<span class="pill ${cls}" onclick="cyclePill(event,${judgeIdx},'${field}')"><span class="pill-dot"></span>${lbl}</span>`;
 }
 
-function acceptedPill(v) {
-  if (v === 'YES') return `<span class="pill p-yes"><span class="pill-dot"></span>Confirmed</span>`;
-  if (v === 'WFF') return `<span class="pill p-wait"><span class="pill-dot"></span>Waiting</span>`;
-  if (v === 'NO') return `<span class="pill p-declined"><span class="pill-dot"></span>Declined</span>`;
-  return '—';
+function exportData() {
+  const html = document.documentElement.outerHTML
+    .replace(/let judges = JSON\.parse[\s\S]*?DEFAULT_JUDGES;/, `let judges = ${JSON.stringify(judges, null, 2)};`);
+  const blob = new Blob([html], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'illume_judge_tracker.html';
+  a.click();
+  showToast('File exported — upload to GitHub to share!');
 }
 
 let filter = 'all', expanded = new Set();
@@ -545,20 +364,20 @@ function render() {
 
     const main = `
       <tr class="${isDone ? 'row-done' : ''}" onclick="toggleRow(${i})">
-        <td>
+        <td style="min-width:160px">
           <div class="j-name">${j.name}</div>
           <div class="j-sub">${j.org} · ${j.country}</div>
         </td>
-        <td><span class="cat cat-${j.cat}">${j.cat}</span></td>
-        <td style="font-size:11px;color:var(--text2)">${j.type}</td>
-        <td>${acceptedPill(j.accepted)}</td>
-        <td class="td-center">${pill(j.portrait)}</td>
-        <td class="td-center">${pill(j.bio)}</td>
-        <td class="td-center">${pill(j.quotes)}</td>
-        <td class="td-center">${pill(j.video)}</td>
-        <td class="td-center">${pill(j.profile)}</td>
-        <td class="td-center">${pill(j.live)}</td>
-        <td class="td-center">${pill(j.social)}</td>
+        <td style="min-width:100px"><span class="cat cat-${j.cat}">${j.cat}</span></td>
+        <td style="min-width:120px;font-size:11px;color:var(--text2)">${j.type}</td>
+        <td style="min-width:110px">${pill(j.accepted, i, 'accepted')}</td>
+        <td class="tc" style="min-width:100px">${pill(j.portrait, i, 'portrait')}</td>
+        <td class="tc" style="min-width:90px">${pill(j.bio, i, 'bio')}</td>
+        <td class="tc" style="min-width:100px">${pill(j.quotes, i, 'quotes')}</td>
+        <td class="tc" style="min-width:90px">${pill(j.video, i, 'video')}</td>
+        <td class="tc" style="min-width:100px">${pill(j.profile, i, 'profile')}</td>
+        <td class="tc" style="min-width:80px">${pill(j.live, i, 'live')}</td>
+        <td class="tc" style="min-width:110px">${pill(j.social, i, 'social')}</td>
       </tr>`;
 
     const detail = isOpen ? `
@@ -573,7 +392,7 @@ function render() {
               <h5>All deliverables</h5>
               <div class="di-pills">
                 ${['portrait','bio','quotes','video','profile','live','social'].map(k =>
-                  `<span class="pill ${pillClass(j[k])}" style="font-size:10px"><span class="pill-dot"></span>${k}: ${pillLabel(j[k])||'—'}</span>`
+                  `<span class="pill ${pillClass(j[k])}" onclick="cyclePill(event,${i},'${k}')" style="font-size:10px"><span class="pill-dot"></span>${k}: ${pillLabel(j[k])||'—'}</span>`
                 ).join('')}
               </div>
             </div>
