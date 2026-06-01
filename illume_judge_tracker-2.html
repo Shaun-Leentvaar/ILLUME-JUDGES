@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Illume 2026 — Judge Tracker</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --surface2: #1c1c1c;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0ede8;
+    --text2: #888;
+    --text3: #555;
+    --accent: #e8d5a0;
+    --accent2: #c4a96e;
+    --green: #4a7c59;
+    --green-bg: rgba(74,124,89,0.15);
+    --orange: #a06c3a;
+    --orange-bg: rgba(160,108,58,0.15);
+    --blue: #3a6a8a;
+    --blue-bg: rgba(58,106,138,0.15);
+    --red: #8a3a3a;
+    --red-bg: rgba(138,58,58,0.15);
+    --gray-bg: rgba(255,255,255,0.05);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .logo-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .logo-sub {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .sync-badge {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* Stats */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    border-bottom: 1px solid var(--border);
+    background: var(--border);
+  }
+
+  .stat-box {
+    background: var(--bg);
+    padding: 1.5rem 2rem;
+  }
+
+  .stat-num {
+    font-size: 32px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-lbl {
+    font-size: 11px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Controls */
+  .controls {
+    padding: 1rem 2rem;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .search {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 7px 14px;
+    border-radius: 6px;
+    width: 260px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search:focus { border-color: var(--border2); }
+  .search::placeholder { color: var(--text3); }
+
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .fbtn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    transition: all 0.15s;
+  }
+
+  .fbtn:hover { border-color: var(--border2); color: var(--text); }
+  .fbtn.active { background: var(--accent); color: #0a0a0a; border-color: var(--accent); font-weight: 500; }
+
+  .cat-filter {
+    margin-left: auto;
+  }
+
+  /* Category select */
+  .cat-select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    padding: 10px 16px;
+    text-align: left;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  tbody tr {
+    transition: background 0.1s;
+    cursor: pointer;
+  }
+
+  tbody tr.row-complete { background: rgba(74,124,89,0.08); border-left: 2px solid #4a7c59; }
+  tbody tr.row-complete:hover { background: rgba(74,124,89,0.14); }
+  tbody tr:hover { background: var(--surface); }
+
+  .judge-name {
+    font-weight: 500;
+    color: var(--text);
+    font-size: 13px;
+  }
+
+  .judge-org {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* Status badges */
+  .status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+
+  .s-yes { background: var(--green-bg); color: #6db87e; border: 1px solid rgba(109,184,126,0.2); }
+  .s-wff { background: var(--blue-bg); color: #6aabcc; border: 1px solid rgba(106,171,204,0.2); }
+  .s-no { background: var(--red-bg); color: #cc6a6a; border: 1px solid rgba(204,106,106,0.2); }
+  .s-req { background: var(--orange-bg); color: #d4935a; border: 1px solid rgba(212,147,90,0.2); }
+  .s-todo { background: var(--gray-bg); color: var(--text3); border: 1px solid var(--border); }
+  .s-nr { background: transparent; color: var(--text3); font-style: italic; }
+
+  /* Dots */
+  .dot-row { display: flex; gap: 5px; align-items: center; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .d-yes { background: #4a7c59; }
+  .d-req { background: #a06c3a; }
+  .d-no { background: #333; }
+  .d-todo { background: #3a6a8a; }
+
+  .cat-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border: 1px solid var(--border);
+    color: var(--text2);
+  }
+
+  /* Expanded row */
+  .detail-row td {
+    background: var(--surface);
+    padding: 16px 24px 20px;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  .detail-section h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+
+  .detail-section p {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  .deliv-list { display: flex; flex-direction: column; gap: 5px; }
+
+  .deliv-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text2);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* Empty */
+  .empty-row td {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  @media (max-width: 768px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .detail-grid { grid-template-columns: 1fr; }
+    .header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <span class="logo-name">The Illume 2026</span>
+    <span class="logo-sub">/ Judge Relations Tracker</span>
+  </div>
+  <span class="sync-badge">Synced — June 2026</span>
+</div>
+
+<div class="stats-row" id="stats"></div>
+
+<div class="controls">
+  <input class="search" id="search" placeholder="Search name, category, org..." oninput="render()">
+  <div class="filters" id="filters">
+    <button class="fbtn active" onclick="setFilter('all',this)">All</button>
+    <button class="fbtn" onclick="setFilter('YES',this)">Confirmed</button>
+    <button class="fbtn" onclick="setFilter('WFF',this)">Waiting</button>
+    <button class="fbtn" onclick="setFilter('NO',this)">Declined</button>
+    <button class="fbtn" onclick="setFilter('incomplete',this)">Incomplete</button>
+  </div>
+  <div class="cat-filter">
+    <select class="cat-select" id="catFilter" onchange="render()">
+      <option value="">All Categories</option>
+      <option>Adventure</option>
+      <option>Aerial</option>
+      <option>Bike</option>
+      <option>Climb</option>
+      <option>Skate</option>
+      <option>Snow</option>
+      <option>Surf</option>
+      <option>Trail</option>
+      <option>Theme</option>
+    </select>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Judge</th>
+        <th>Category</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Portrait</th>
+        <th>Bio</th>
+        <th>Quotes</th>
+        <th>Video</th>
+        <th>Profile</th>
+        <th>Live</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<div class="footer">
+  <span class="footer-text">The Illume Awards 2026 — zooom productions gmbh</span>
+  <span class="footer-text" id="count"></span>
+</div>
+
+<script>
+const judges = [
+  { name:'Chris Burkard', cat:'Adventure', type:'Photographer', gender:'M', country:'USA', org:'Former Winner', contact:'chris@chrisburkard.com', accepted:'YES', portrait:'YES', bio:'YES', video:'NOT REQ', quotes:'YES', profile:'YES', live:'YES', notes:'Happy to support, sends assets fast. Has quite the businessman thinking.' },
+  { name:'Tim Kemple', cat:'Adventure', type:'NGO Photographer', gender:'M', country:'USA', org:'Leave No Trace', contact:'tim@kemplemedia.com', accepted:'YES', portrait:'REQUESTED', bio:'YES', video:'NOT REQ', quotes:'REQUESTED', profile:'INCOMPLETE', live:'', notes:'Just need portrait. Followed up 19 May.' },
+  { name:'Savanna Cummins', cat:'Adventure', type:'Athlete', gender:'W', country:'USA', org:'Athlete', contact:'info@savcummins.com', accepted:'YES', portrait:'YES', bio:'YES', video:'REQUESTED', quotes:'REQUESTED', profile:'YES', live:'YES', notes:'Profile live. Quote answers and video still pending.' },
+  { name:'John Summerton', cat:'Adventure', type:'Media', gender:'M', country:'UK', org:'Sidetracked', contact:'john@sidetracked.co.uk', accepted:'YES', portrait:'YES', bio:'YES', video:'REQUESTED', quotes:'REQUESTED', profile:'YES', live:'YES', notes:'Deliverables received. Profile live.' },
+  { name:"Justin O'Neill", cat:'Adventure', type:'Partner', gender:'M', country:'USA', org:'Outside', contact:'contact form', accepted:'WFF', portrait:'', bio:'', video:'', quotes:'', profile:'', live:'', notes:'Contacted via contact form. Waiting for response.' },
+  { name:'Adi Geisegger', cat:'Aerial', type:'Photographer', gender:'M', country:'AUT', org:'Photographer / Angelbird', contact:'office@adigeisegger.com', accepted:'YES', portrait:'YES', bio:'YES', video:'YES', quotes:'YES', profile:'YES', live:'YES', notes:'Super fast responses. English not great. Connected to X-Alps team.' },
+  { name:'Marcus King', cat:'Aerial', type:'Media', gender:'M', country:'GBR', org:'Cross Country Magazine', contact:'marcus@xcmag.com', accepted:'YES', portrait:'YES', bio:'YES', video:'NOT REQ', quotes:'YES', profile:'YES', live:'YES', notes:'Responses a bit slow. Contact from Tarquin.' },
+  { name:'Amber Forte', cat:'Aerial', type:'Athlete', gender:'W', country:'GBR', org:'Red Bull Athlete', contact:'amberfortecoach@gmail.com', accepted:'YES', portrait:'REQUESTED', bio:'REQUESTED', video:'NOT REQ', quotes:'', profile:'TO DO', live:'', notes:'Said yes. Deliverables pending.' },
+  { name:'Brian Park', cat:'Bike', type:'Media', gender:'M', country:'USA', org:'Outside / Pinkbike', contact:'bpark@outsideinc.com', accepted:'YES', portrait:'YES', bio:'YES', video:'NO', quotes:'YES', profile:'YES', live:'YES', notes:'Responses a bit slow. Follow-up sent 10.3.' },
+  { name:'Senad Grosic', cat:'Bike', type:'Athlete', gender:'M', country:'GER', org:'Red Bull Athlete', contact:'info@senad-grosic.com', accepted:'YES', portrait:'REQUESTED', bio:'REQUESTED', video:'TO DO', quotes:'REQUESTED', profile:'INCOMPLETE', live:'', notes:'No response to follow-ups. Confirmed via Ulrich.' },
+  { name:'Katie Lozancich', cat:'Bike', type:'Photographer', gender:'W', country:'USA', org:'Ski Journal', contact:'katie.lozancich@gmail.com', accepted:'YES', portrait:'YES', bio:'YES', video:'REQUESTED', quotes:'REQUESTED', profile:'YES', live:'YES', notes:'Profile live. Quote answers pending.' },
+  { name:'Micayla Gatto', cat:'Bike', type:'NGO Photographer', gender:'W', country:'USA', org:'World Bicycle Relief', contact:'via Ryan Snyder', accepted:'WFF', portrait:'REQUESTED', bio:'REQUESTED', video:'REQUESTED', quotes:'', profile:'REQUESTED', live:'', notes:'Interested but no confirmation. Asked about payment.' },
+  { name:'Krystle Wright', cat:'Climb', type:'Photographer', gender:'W', country:'AUS', org:'Former Winner / Leica', contact:'k@krystlewright.com', accepted:'YES', portrait:'YES', bio:'YES', video:'NO', quotes:'YES', profile:'YES', live:'YES', notes:'Overall winner 2023. Video not possible. Busy with renovation.' },
+  { name:'Lena Drapella', cat:'Climb', type:'NGO Photographer', gender:'W', country:'GBR', org:'Access Fund', contact:'info@lenadrapella.com', accepted:'YES', portrait:'YES', bio:'YES', video:'YES', quotes:'YES', profile:'YES', live:'YES', notes:'Very thorough. Always delivers.' },
+  { name:'Matt Stetson', cat:'Climb', type:'Media', gender:'M', country:'CAN', org:'Gripped Climbing Magazine', contact:'matt.stetson@gripped.com', accepted:'YES', portrait:'YES', bio:'YES', video:'YES', quotes:'YES', profile:'YES', live:'YES', notes:'Video received. Very fast responses.' },
+  { name:'Will Gadd', cat:'Climb', type:'Athlete', gender:'M', country:'CAN', org:'Red Bull Athlete', contact:'williamgadd@gmail.com', accepted:'YES', portrait:'YES', bio:'YES', video:'TO DO', quotes:'YES', profile:'YES', live:'YES', notes:'Slow responses. Better to call directly or ask Ulrich.' },
+  { name:'Fred Mortagne', cat:'Skate', type:'Photographer', gender:'M', country:'FRA', org:'Former Winner', contact:'bloodyfrenchfred@gmail.com', accepted:'YES', portrait:'YES', bio:'YES', video:'NOT REQ', quotes:'YES', profile:'YES', live:'YES', notes:'Overall winner 2007.' },
+  { name:'Theo Acworth', cat:'Skate', type:'Photographer', gender:'M', country:'GBR', org:'Freelance', contact:'theoacworth@hotmail.com', accepted:'YES', portrait:'YES', bio:'YES', video:'REQUESTED', quotes:'YES', profile:'YES', live:'YES', notes:'Will do skate pre-selection. Video not possible — too busy.' },
+  { name:'Atiba Jefferson', cat:'Skate', type:'Media', gender:'M', country:'USA', org:'Thrasher', contact:'contact form', accepted:'WFF', portrait:'', bio:'', video:'', quotes:'', profile:'', live:'', notes:'Contacted via contact form. Pending.' },
+  { name:'Zorah Olivia', cat:'Skate', type:'NGO Photographer', gender:'W', country:'USA', org:'Skateistan', contact:'zoraholivia@gmail.com', accepted:'YES', portrait:'YES', bio:'YES', video:'REQUESTED', quotes:'YES', profile:'YES', live:'YES', notes:'Video missed deadline — family issues. Generally needs reminders.' },
+  { name:'Ray Barbee', cat:'Skate', type:'Athlete', gender:'M', country:'USA', org:'Athlete', contact:'rayvbarbee@gmail.com', accepted:'YES', portrait:'YES', bio:'REQUESTED', video:'NOT REQ', quotes:'YES', profile:'YES', live:'YES', notes:'Profile live. Via Ulrich.' },
+  { name:"Donny O'Neill", cat:'Snow', type:'NGO Photographer', gender:'M', country:'USA', org:'Protect Our Winters', contact:'donny@protectourwinters.org', accepted:'YES', portrait:'YES', bio:'YES', video:'NOT REQ', quotes:'YES', profile:'YES', live:'YES', notes:'Partner comms via Anna Gmeiner.' },
+  { name:'Lorenz Holder', cat:'Snow', type:'Photographer', gender:'M', country:'GER', org:'Former Winner', contact:'info@lorenzholder.com', accepted:'YES', portrait:'YES', bio:'YES', video:'REQUESTED', quotes:'YES', profile:'YES', live:'YES', notes:'Very slow responses. Better to call or ask Ulrich.' },
+  { name:'Marco Büchel', cat:'Snow', type:'Photographer', gender:'M', country:'LIE', org:'Former Athlete', contact:'home@marco-buechel.li', accepted:'YES', portrait:'YES', bio:'YES', video:'REQUESTED', quotes:'YES', profile:'YES', live:'YES', notes:'Waiting for updated bio from Leica (24.3.26).' },
+  { name:'Mark Clavin', cat:'Snow', type:'Media', gender:'M', country:'USA', org:'Snowboarder Magazine', contact:'markclavinphoto@gmail.com', accepted:'YES', portrait:'REQUESTED', bio:'REQUESTED', video:'REQUESTED', quotes:'REQUESTED', profile:'TO DO', live:'', notes:'Just confirmed via Luke (Red Bull). Deliverables requested.' },
+  { name:'Dave Reddick', cat:'Snow', type:'Media', gender:'M', country:'USA', org:'Powder Magazine', contact:'david.reddick@powder.com', accepted:'WFF', portrait:'', bio:'', video:'', quotes:'', profile:'', live:'', notes:'Outreach sent via email.' },
+  { name:'Aaron Lieber', cat:'Surf', type:'NGO Photographer', gender:'M', country:'USA', org:'Surfrider Foundation', contact:'lieberfilms@gmail.com', accepted:'YES', portrait:'YES', bio:'YES', video:'YES', quotes:'YES', profile:'YES', live:'YES', notes:'Video received. Fast responses.' },
+  { name:'Ben Thouard', cat:'Surf', type:'Photographer', gender:'M', country:'FRA', org:'Former Winner', contact:'benthouard@gmail.com', accepted:'YES', portrait:'YES', bio:'YES', video:'YES', quotes:'YES', profile:'YES', live:'YES', notes:'Video received. Overall winner 2019.' },
+  { name:'Heidi Volpe', cat:'Surf', type:'Partner', gender:'W', country:'USA', org:'Patagonia', contact:'Heidi.volpe@patagonia.com', accepted:'YES', portrait:'REQUESTED', bio:'REQUESTED', video:'TO DO', quotes:'', profile:'INCOMPLETE', live:'YES', notes:'Slow responses. Pending Patagonia partner contract.' },
+  { name:'Ray Bisschop', cat:'Surf', type:'Media', gender:'M', country:'AUS', org:'Surfing Life', contact:'ray@surfinglife.com.au', accepted:'YES', portrait:'REQUESTED', bio:'REQUESTED', video:'TO DO', quotes:'YES', profile:'YES', live:'YES', notes:'Missing portrait + magazine cover. Slow responses. Let know about ceremony in advance.' },
+  { name:'Nic von Rupp', cat:'Surf', type:'Athlete', gender:'M', country:'PRT', org:'Pro Surfer', contact:'nicolau_svr@hotmail.com', accepted:'YES', portrait:'REQUESTED', bio:'REQUESTED', video:'REQUESTED', quotes:'', profile:'TO DO', live:'', notes:'Via Bernie Hörtnagl. No response to last email.' },
+  { name:'Alexis Berg', cat:'Trail', type:'NGO Photographer', gender:'M', country:'FRA', org:'Trash Free Trails', contact:'berg.alexis@gmail.com', accepted:'YES', portrait:'YES', bio:'YES', video:'NOT REQ', quotes:'REQUESTED', profile:'YES', live:'YES', notes:'Profile live. Quote answers still pending.' },
+  { name:'Will Saunders', cat:'Trail', type:'Photographer', gender:'M', country:'USA', org:'Former Winner', contact:'williamsaunders17@gmail.com', accepted:'YES', portrait:'YES', bio:'INCOMPLETE', video:'NOT REQ', quotes:'YES', profile:'YES', live:'YES', notes:'Overall winner 2021. Super motivated.' },
+  { name:'Zoe Rom', cat:'Trail', type:'Media', gender:'W', country:'USA', org:'Trail Runner Magazine', contact:'Zrom@outsidemag.com', accepted:'WFF', portrait:'', bio:'', video:'', quotes:'', profile:'', live:'', notes:'Outreach sent. Waiting for response.' },
+  { name:'David Elmfeldt', cat:'Theme', type:'Media', gender:'M', country:'SWE', org:'Fotosidan', contact:'david.elmfeldt@gmail.com', accepted:'YES', portrait:'YES', bio:'INCOMPLETE', video:'NOT REQ', quotes:'YES', profile:'YES', live:'YES', notes:'Responses slow. Bio incomplete.' },
+  { name:'Denis Balibouse', cat:'Theme', type:'Photographer', gender:'M', country:'SUI', org:'Reuters', contact:'denis.balibouse@thomsonreuters.com', accepted:'YES', portrait:'YES', bio:'YES', video:'TO DO', quotes:'YES', profile:'YES', live:'YES', notes:'RBIL 16,19,21,23 judge. Has not signed off on profile yet (16.04.26).' },
+  { name:'Felipe Suau', cat:'Theme', type:'Media', gender:'M', country:'CHL', org:'Pousta', contact:'felipesuau@pousta.com', accepted:'YES', portrait:'YES', bio:'YES', video:'NO', quotes:'YES', profile:'YES', live:'YES', notes:'Fast responses. Did not want video.' },
+  { name:'James Artaius', cat:'Theme', type:'Media', gender:'M', country:'GBR', org:'Digital Camera World', contact:'james.artaius@futurenet.com', accepted:'YES', portrait:'YES', bio:'YES', video:'NOT REQ', quotes:'YES', profile:'YES', live:'YES', notes:'All deliverables received. Back from paternity leave.' },
+  { name:'Laura Luykenaar', cat:'Theme', type:'Media', gender:'W', country:'NED', org:'Salt Magazine', contact:'laura@getsalt.com', accepted:'YES', portrait:'YES', bio:'YES', video:'REQUESTED', quotes:'YES', profile:'YES', live:'YES', notes:'Very motivated. Video requested — not yet received.' },
+  { name:'Laura Stanley', cat:'Theme', type:'Media', gender:'W', country:'CAN', org:'Pexels', contact:'laura@pexels.com', accepted:'YES', portrait:'YES', bio:'YES', video:'YES', quotes:'REQUESTED', profile:'YES', live:'YES', notes:'RBIL 19,21,23 judge. Responses a bit slow.' },
+  { name:'Richard Walch', cat:'Theme', type:'Photographer', gender:'M', country:'GER', org:'Photographer / Canon', contact:'richard@richardwalch.com', accepted:'YES', portrait:'REQUESTED', bio:'REQUESTED', video:'NOT REQ', quotes:'REQUESTED', profile:'TO DO', live:'', notes:'No response since April 30. Close friend of Canon.' },
+  { name:'Mikko Takkunen', cat:'Theme', type:'Media', gender:'M', country:'USA', org:'New York Times', contact:'mikko@mikkotakkunen.com', accepted:'WFF', portrait:'', bio:'', video:'', quotes:'', profile:'', live:'', notes:'Outreach sent via email.' },
+  { name:'Paul Nicklen', cat:'Theme', type:'Photographer', gender:'M', country:'CAN', org:'NatGeo / SeaLegacy', contact:'via Michelle Genereux', accepted:'WFF', portrait:'', bio:'', video:'', quotes:'', profile:'', live:'', notes:'Contacted via office manager Michelle.' },
+  { name:'Renan Ozturk', cat:'Theme', type:'Photographer', gender:'M', country:'USA', org:'NatGeo', contact:'info@renanozturk.com', accepted:'WFF', portrait:'', bio:'', video:'', quotes:'', profile:'', live:'', notes:'Outreach sent via general enquiries email.' },
+  { name:'Jimmy Chin', cat:'Climb', type:'Photographer', gender:'M', country:'USA', org:'Photographer', contact:'eric.c.rohr@gmail.com', accepted:'NO', portrait:'', bio:'', video:'', quotes:'', profile:'', live:'', notes:'Too busy. Ulrich wants to ask again personally.' },
+  { name:'Kilian Jornet', cat:'Trail', type:'Athlete', gender:'M', country:'ESP', org:'Athlete', contact:'jordi.tomas@lymbus.com', accepted:'NO', portrait:'', bio:'', video:'', quotes:'', profile:'', live:'', notes:'Declined via Laura Font / Jordi Tomas.' },
+  { name:'Peter Salzmann', cat:'Aerial', type:'Athlete', gender:'M', country:'AUT', org:'Red Bull Athlete', contact:'mail@petersalzmann.at', accepted:'NO', portrait:'', bio:'', video:'', quotes:'', profile:'', live:'', notes:'Big projects next 2-3 years. Interested in future editions.' },
+];
+
+const DLABELS = ['portrait','bio','quotes','video','profile','live'];
+
+function dotClass(v) {
+  if (v === 'YES') return 'd-yes';
+  if (v === 'REQUESTED') return 'd-req';
+  if (v === 'TO DO' || v === 'INCOMPLETE') return 'd-todo';
+  if (v === 'NOT REQ') return 'd-no';
+  return 'd-no';
+}
+
+function statusClass(v) {
+  if (v === 'YES') return 's-yes';
+  if (v === 'WFF') return 's-wff';
+  if (v === 'NO') return 's-no';
+  if (v === 'REQUESTED' || v === 'INCOMPLETE') return 's-req';
+  if (v === 'NOT REQ') return 's-nr';
+  return 's-todo';
+}
+
+function statusLabel(v) {
+  if (v === 'YES') return 'Yes';
+  if (v === 'WFF') return 'Waiting';
+  if (v === 'NO') return 'No';
+  if (v === 'REQUESTED') return 'Req.';
+  if (v === 'NOT REQ') return 'N/A';
+  if (v === 'TO DO') return 'To Do';
+  if (v === 'INCOMPLETE') return 'Incomplete';
+  return v || '—';
+}
+
+let filter = 'all', expanded = new Set();
+
+function setFilter(f, btn) {
+  filter = f;
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function toggleRow(i) {
+  if (expanded.has(i)) expanded.delete(i);
+  else expanded.add(i);
+  render();
+}
+
+function render() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const cat = document.getElementById('catFilter').value;
+
+  const filtered = judges.filter((j, i) => {
+    const mq = j.name.toLowerCase().includes(q) || j.org.toLowerCase().includes(q) || j.country.toLowerCase().includes(q) || j.type.toLowerCase().includes(q);
+    const mc = !cat || j.cat === cat;
+    let mf = true;
+    if (filter === 'YES') mf = j.accepted === 'YES';
+    else if (filter === 'WFF') mf = j.accepted === 'WFF';
+    else if (filter === 'NO') mf = j.accepted === 'NO';
+    else if (filter === 'incomplete') mf = j.accepted === 'YES' && (j.live !== 'YES' || j.portrait !== 'YES' || j.bio !== 'YES');
+    return mq && mc && mf;
+  });
+
+  // Stats
+  const confirmed = judges.filter(j => j.accepted === 'YES').length;
+  const live = judges.filter(j => j.live === 'YES').length;
+  const wff = judges.filter(j => j.accepted === 'WFF').length;
+  const declined = judges.filter(j => j.accepted === 'NO').length;
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-box"><div class="stat-num">${judges.length}</div><div class="stat-lbl">Total Tracked</div></div>
+    <div class="stat-box"><div class="stat-num">${confirmed}</div><div class="stat-lbl">Confirmed</div></div>
+    <div class="stat-box"><div class="stat-num">${live}</div><div class="stat-lbl">Profile Live</div></div>
+    <div class="stat-box"><div class="stat-num">${wff}</div><div class="stat-lbl">Awaiting Reply</div></div>
+  `;
+
+  document.getElementById('count').textContent = `Showing ${filtered.length} of ${judges.length}`;
+
+  const tbody = document.getElementById('tbody');
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="10">No judges found</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(j => {
+    const i = judges.indexOf(j);
+    const isOpen = expanded.has(i);
+    const isComplete = j.live === 'YES' && j.profile === 'YES';
+    const mainRow = `
+      <tr class="${isComplete ? 'row-complete' : ''}" onclick="toggleRow(${i})">
+        <td>
+          <div class="judge-name">${j.name}</div>
+          <div class="judge-org">${j.org} · ${j.country}</div>
+        </td>
+        <td><span class="cat-tag">${j.cat}</span></td>
+        <td style="color:var(--text2);font-size:12px">${j.type}</td>
+        <td><span class="status ${j.accepted === 'YES' ? 's-yes' : j.accepted === 'WFF' ? 's-wff' : 's-no'}">${j.accepted === 'YES' ? 'Confirmed' : j.accepted === 'WFF' ? 'Waiting' : 'Declined'}</span></td>
+        <td><span class="status ${statusClass(j.portrait)}">${statusLabel(j.portrait)}</span></td>
+        <td><span class="status ${statusClass(j.bio)}">${statusLabel(j.bio)}</span></td>
+        <td><span class="status ${statusClass(j.quotes)}">${statusLabel(j.quotes)}</span></td>
+        <td><span class="status ${statusClass(j.video)}">${statusLabel(j.video)}</span></td>
+        <td><span class="status ${statusClass(j.profile)}">${statusLabel(j.profile)}</span></td>
+        <td><span class="status ${statusClass(j.live)}">${statusLabel(j.live)}</span></td>
+      </tr>`;
+
+    const detailRow = isOpen ? `
+      <tr class="detail-row">
+        <td colspan="10">
+          <div class="detail-grid">
+            <div class="detail-section">
+              <h4>Contact</h4>
+              <p style="font-family:'DM Mono',monospace;font-size:11px">${j.contact}</p>
+            </div>
+            <div class="detail-section">
+              <h4>Deliverables overview</h4>
+              <div class="deliv-list">
+                ${DLABELS.map(k => `<div class="deliv-item"><div class="dot ${dotClass(j[k])}"></div>${k}: ${j[k] || '—'}</div>`).join('')}
+              </div>
+            </div>
+            <div class="detail-section">
+              <h4>Notes</h4>
+              <p>${j.notes || 'No notes.'}</p>
+            </div>
+          </div>
+        </td>
+      </tr>` : '';
+
+    return mainRow + detailRow;
+  }).join('');
+}
+
+render();
+</script>
+</body>
+</html>
