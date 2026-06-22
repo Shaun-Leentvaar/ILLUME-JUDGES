@@ -262,7 +262,16 @@ const DEFAULT_JUDGES = [
 const EDITABLE_FIELDS = ['accepted','portrait','bio','quotes','video','profile','live','social'];
 const CYCLE = { accepted: ['YES','WFF','NO'], portrait: ['YES','REQUESTED','TO DO','NO','N/A',''], bio: ['YES','REQUESTED','INCOMPLETE','TO DO','NO',''], quotes: ['YES','REQUESTED','TO DO','NO',''], video: ['YES','REQUESTED','TO DO','NO','N/A',''], profile: ['YES','REQUESTED','INCOMPLETE','TO DO','NO',''], live: ['YES',''], social: ['YES','REQUESTED','TO DO','NO',''] };
 
-let judges = JSON.parse(localStorage.getItem('illume_judges') || 'null') || DEFAULT_JUDGES;
+const TRACKER_VERSION = 'v2026-06-22-01';
+const storedVersion = localStorage.getItem('illume_judges_version');
+let judges;
+if (storedVersion === TRACKER_VERSION) {
+  judges = JSON.parse(localStorage.getItem('illume_judges') || 'null') || DEFAULT_JUDGES;
+} else {
+  judges = DEFAULT_JUDGES;
+  localStorage.setItem('illume_judges_version', TRACKER_VERSION);
+  localStorage.setItem('illume_judges', JSON.stringify(DEFAULT_JUDGES));
+}
 function save() { localStorage.setItem('illume_judges', JSON.stringify(judges)); }
 
 function cyclePill(e, judgeIdx, field) {
