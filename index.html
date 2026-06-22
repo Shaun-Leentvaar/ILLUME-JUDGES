@@ -241,7 +241,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const TRACKER_VERSION = 'v2026-06-22-03';
+const TRACKER_VERSION = 'v2026-06-22-04';
 
 const DEFAULT_JUDGES = [
 { name:'Chris Burkard', cat:'Adventure', type:'Photographer', country:'USA', org:'Former Winner', contact:'chris@chrisburkard.com', accepted:'YES', portrait:'YES', bio:'YES', video:'N/A', quotes:'YES', profile:'YES', live:'YES', social:'YES', notes:'Featured in collab "Why to Submit" video, June 19, with Krystle Wright and Ben Thouard \u2014 awaiting acceptance.', statusFlag:'none' },
@@ -506,7 +506,7 @@ function render() {
     let mf = true;
     if (filter === 'YES') mf = j.accepted === 'YES';
     else if (filter === 'WFF') mf = j.accepted === 'WFF';
-    else if (filter === 'incomplete') mf = isIncomplete(j);
+    else if (filter === 'incomplete') mf = j.statusFlag === 'yellow';
     return mq && mc && mf;
   });
 
@@ -528,7 +528,6 @@ function render() {
   tbody.innerHTML = filtered.map(j => {
     const i = judges.indexOf(j);
     const isOpen = expanded.has(i);
-    const incomplete = isIncomplete(j);
     const incomplete = j.statusFlag === 'yellow';
     const flag = j.statusFlag || 'none';
     const rowClass = FLAG_ROWCLASS[flag] || '';
