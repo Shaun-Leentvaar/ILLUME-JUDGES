@@ -29,6 +29,30 @@
   .sync-pill { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text3); background: var(--bg); border: 1px solid var(--border2); padding: 3px 10px; border-radius: 20px; }
   .export-btn { background: var(--accent); color: #fff; border: none; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; padding: 6px 14px; border-radius: 6px; cursor: pointer; }
   .export-btn:hover { opacity: 0.9; }
+  .add-btn { background: var(--surface); color: var(--accent); border: 1.5px solid var(--accent); font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; padding: 6px 14px; border-radius: 6px; cursor: pointer; }
+  .add-btn:hover { background: var(--row-done); }
+
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(28,27,25,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border-radius: 12px; padding: 1.75rem; width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; }
+  .modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+  .modal-sub { font-size: 12px; color: var(--text2); margin-bottom: 18px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .form-field { display: flex; flex-direction: column; gap: 4px; }
+  .form-field.full { grid-column: 1 / -1; }
+  .form-field label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text3); }
+  .form-field input, .form-field select, .form-field textarea {
+    border: 1px solid var(--border2); border-radius: 6px; padding: 7px 10px;
+    font-family: 'Inter', sans-serif; font-size: 13px; color: var(--text); background: var(--bg); outline: none;
+  }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--accent); }
+  .form-field textarea { resize: vertical; min-height: 50px; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+  .modal-btn { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; padding: 8px 16px; border-radius: 6px; cursor: pointer; border: none; }
+  .modal-btn.cancel { background: var(--bg); color: var(--text2); border: 1px solid var(--border2); }
+  .modal-btn.save { background: var(--accent); color: #fff; }
+  .modal-close { position: absolute; top: 16px; right: 18px; background: none; border: none; font-size: 18px; color: var(--text3); cursor: pointer; }
+  .modal { position: relative; }
   .stats { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface); border-bottom: 1px solid var(--border); }
   .stat { padding: 1rem 1.75rem; border-right: 1px solid var(--border); }
   .stat:last-child { border-right: none; }
@@ -97,7 +121,7 @@
 
 <div class="header">
   <div class="brand"><div class="brand-dot"></div><span class="brand-name">The Illume 2026</span><span class="brand-sep">/</span><span class="brand-sub">Judge Relations Tracker</span></div>
-  <div class="header-right"><span class="sync-pill">Synced — June 21, 2026</span><button class="export-btn" onclick="exportData()">⬇ Export updated file</button></div>
+  <div class="header-right"><span class="sync-pill">Synced — June 21, 2026</span><button class="add-btn" onclick="openAddModal()">+ Add Judge</button><button class="export-btn" onclick="exportData()">⬇ Export updated file</button></div>
 </div>
 
 <div class="stats" id="stats"></div>
@@ -138,6 +162,45 @@
 </div>
 
 <div class="footer"><span>The Illume Awards 2026 — zooom productions gmbh</span><span id="count"></span></div>
+
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAddModal()">✕</button>
+    <h3>Add New Judge</h3>
+    <p class="modal-sub">Fill in what you know — fields can be left blank and updated later.</p>
+    <div class="form-grid">
+      <div class="form-field full"><label>Name *</label><input type="text" id="f-name" placeholder="e.g. Jane Doe"></div>
+      <div class="form-field"><label>Category</label>
+        <select id="f-cat">
+          <option>Adventure</option><option>Aerial</option><option>Bike</option>
+          <option>Climb</option><option>Skate</option><option>Snow</option>
+          <option>Surf</option><option>Trail</option><option>Theme</option>
+        </select>
+      </div>
+      <div class="form-field"><label>Type</label>
+        <select id="f-type">
+          <option>Athlete</option><option>Photographer</option><option>NGO Photographer</option>
+          <option>Media</option><option>Partner</option>
+        </select>
+      </div>
+      <div class="form-field"><label>Country</label><input type="text" id="f-country" placeholder="e.g. USA"></div>
+      <div class="form-field"><label>Org / Affiliation</label><input type="text" id="f-org" placeholder="e.g. Red Bull Athlete"></div>
+      <div class="form-field full"><label>Contact</label><input type="text" id="f-contact" placeholder="email or contact route"></div>
+      <div class="form-field"><label>Accepted</label>
+        <select id="f-accepted"><option value="WFF">Waiting</option><option value="YES">Confirmed</option><option value="NO">Declined</option></select>
+      </div>
+      <div class="form-field"><label>Profile Live?</label>
+        <select id="f-live"><option value="">No</option><option value="YES">Yes</option></select>
+      </div>
+      <div class="form-field full"><label>Notes</label><textarea id="f-notes" placeholder="Any context worth tracking..."></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeAddModal()">Cancel</button>
+      <button class="modal-btn save" onclick="saveNewJudge()">Add Judge</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -220,6 +283,53 @@ function showToast(msg) {
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.classList.remove('show'), 2000);
 }
+
+function openAddModal() {
+  document.getElementById('addModal').classList.add('open');
+  document.getElementById('f-name').focus();
+}
+
+function closeAddModal() {
+  document.getElementById('addModal').classList.remove('open');
+  ['f-name','f-country','f-org','f-contact','f-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-cat').value = 'Adventure';
+  document.getElementById('f-type').value = 'Athlete';
+  document.getElementById('f-accepted').value = 'WFF';
+  document.getElementById('f-live').value = '';
+}
+
+function saveNewJudge() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { showToast('Please enter a name'); return; }
+
+  const accepted = document.getElementById('f-accepted').value;
+  const liveVal = document.getElementById('f-live').value;
+  const blank = accepted === 'WFF' || accepted === 'NO' ? '' : '';
+
+  const newJudge = {
+    name,
+    cat: document.getElementById('f-cat').value,
+    type: document.getElementById('f-type').value,
+    country: document.getElementById('f-country').value.trim(),
+    org: document.getElementById('f-org').value.trim(),
+    contact: document.getElementById('f-contact').value.trim(),
+    accepted,
+    portrait: '', bio: '', quotes: '', video: '', profile: '',
+    live: liveVal,
+    social: '',
+    notes: document.getElementById('f-notes').value.trim(),
+  };
+
+  judges.push(newJudge);
+  save();
+  closeAddModal();
+  showToast(`${name} added to the tracker!`);
+  render();
+}
+
+document.getElementById('addModal').addEventListener('click', (e) => {
+  if (e.target.id === 'addModal') closeAddModal();
+});
 
 function pillClass(v) {
   if (v === 'YES') return 'p-yes';
